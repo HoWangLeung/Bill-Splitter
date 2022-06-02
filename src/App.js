@@ -12,30 +12,81 @@ function App(props) {
     {
       id: 0,
       name: "Player 1",
-      events: [
-        { id: 0, name: "Lunch", price: 123 },
-      ],
+      items: [{ id: 0, name: "Lunch", price: 0 }],
+      total: 0,
     },
     {
       id: 1,
       name: "Player 2",
-      events: [{ id: 0, name: "Dinner", price: 456 }],
+      items: [{ id: 0, name: "Dinner", price: 0 }],
+      total: 0,
     },
     {
       id: 2,
       name: "Player 3",
-      events: [{ id: 0, name: "Breakfast", price: 789 }],
+      items: [{ id: 0, name: "Breakfast", price: 0 }],
+      total: 0,
     },
   ]);
 
- useEffect(() => {
-  console.log(data);
- 
-   return () => {
-    
-   }
- }, [data])
- 
+  const [displayText,setDisplayText] = useState([])
+
+  useEffect(() => {
+    let newData = [];
+    Array.from(Array(numPeople).keys()).forEach((num) => {
+      newData.push({
+        id: num,
+        name: `Person ${num + 1}`,
+        items: [{ id: 0, name: "", price: 0 }],
+      });
+    });
+
+    setData([...newData]);
+  }, [numPeople]);
+
+  const calculateResult = () => {
+    let payments = {};
+    data.map((person) => {
+      payments[person.name]=person.total
+    });
+
+    splitPayments(payments)
+  };
+
+  const splitPayments = (payments) => {
+    const people = Object.keys(payments);
+    const valuesPaid = Object.values(payments);
+
+    const sum = valuesPaid.reduce((acc, curr) => curr + acc);
+    const mean = sum / people.length;
+
+    const sortedPeople = people.sort(
+      (personA, personB) => payments[personA] - payments[personB]
+    );
+    const sortedValuesPaid = sortedPeople.map(
+      (person) => payments[person] - mean
+    );
+
+    let i = 0;
+    let j = sortedPeople.length - 1;
+    let debt;
+
+    while (i < j) {
+      debt = Math.min(-sortedValuesPaid[i], sortedValuesPaid[j]);
+      sortedValuesPaid[i] += debt;
+      sortedValuesPaid[j] -= debt;
+
+      console.log(`${sortedPeople[i]} owes ${sortedPeople[j]} $${debt}`);
+
+      if (sortedValuesPaid[i] === 0) {
+        i++;
+      }
+
+      if (sortedValuesPaid[j] === 0) {
+        j--;
+      }
+    }
+  };
 
   return (
     <div className="App">
@@ -67,6 +118,9 @@ function App(props) {
       </Container>
 
       <Events data={data} setData={setData} />
+      <Button variant="contained" onClick={calculateResult}>
+        Calculate
+      </Button>
     </div>
   );
 }
