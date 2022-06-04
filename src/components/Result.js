@@ -10,14 +10,17 @@ const Item = styled(Paper)(({ theme }) => ({
   textAlign: "center",
   color: theme.palette.text.secondary,
   margin: "10px 0px 10px 0px",
-   width: "100%",
+  width: "100%",
   height: "20px",
 }));
 
-export default function Result({ result ,sum}) {
+export default function Result({ result, sum }) {
   return (
     <Grid container item>
-      <Grid>Total Expenses: {sum}</Grid>
+      <Grid container item>
+        Total Expenses: {sum}
+      </Grid>
+    
       <Grid container item>
         {result.length > 0 &&
           result.map((r) => {
@@ -32,7 +35,7 @@ export default function Result({ result ,sum}) {
                     <Typography> &nbsp;pays&nbsp;</Typography>
                     <Typography sx={{ fontWeight: "600" }}>
                       {" "}
-                      ${(Math.round(r.amount * 100) / 100).toFixed(2)}
+                      $ {(Math.round(r.amount * 100) / 100).toFixed(2)}
                     </Typography>
                     <Typography>&nbsp;to&nbsp;</Typography>
                     <Typography sx={{ fontWeight: "600" }}>

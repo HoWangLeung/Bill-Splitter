@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import React from "react";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
-
+import EditIcon from '@mui/icons-material/Edit';
 export default function Events(props) {
   const { data, setData } = props;
   console.log(props);
@@ -84,55 +84,77 @@ export default function Events(props) {
     });
 
     let newData = data.map((d) => {
-      let subTotal =0
+      let subTotal = 0;
       if (d.id === targetPerson.id) {
         d = targetPerson;
       }
-      d.items.forEach(item=> subTotal+=parseInt(item.price))
-      d.total=subTotal
+      d.items.forEach((item) => (subTotal += parseInt(item.price)));
+      d.total = subTotal;
 
       return d;
     });
 
     console.log(newData);
 
-    
     setData([...newData]);
+  };
+
+  const changeName = (person) => {
+    console.log(person);
   };
 
   return data.map((person, i) => (
     <Card
       raised
       key={person.name}
-      style={{ width: "600px", margin: "20px", padding: "20px" }}
-   
+      style={{
+        width: "600px",
+        margin: "20px",
+        padding: "20px",
+        borderRadius: "15px",
+      }}
     >
-      <Typography>Person {i + 1}</Typography>
+      <Grid container direction="row" alignItems="center" justifyContent="center">
+        <Typography sx={{ fontWeight: "600" }}>{person.name}</Typography>
+        <IconButton
+          sx={{ borderRadius: 0 }}
+          onClick={() => changeName(person)}
+          aria-label="delete"
+        >
+          <EditIcon   sx={{height:"15px"}} />
+        </IconButton>
+      </Grid>
+
       <Grid
         container
         justifyContent="center"
         alignItems="center"
         direction="column"
-  
       >
         {person.items.map((item, eventIndex) => (
-          <Stack key={item.id} direction="row" >
+          <Stack
+            key={item.id}
+            direction="row"
+            spacing={1}
+            sx={{ margin: "10px 0px" }}
+          >
             <TextField
               required
-              label="Required"
+              label="Item"
               name="name"
               onChange={(e) => handleEventChange(e, item, person)}
               value={item.name}
             />
             <TextField
               required
-              label="Required"
+              label="Amount"
               name="price"
               onChange={(e) => handleEventChange(e, item, person)}
-              value={item.price===0?'':item.price}
+              value={item.price === 0 ? "" : item.price}
             />
+
             <IconButton
-            sx={{margin:"10px"}}
+              style={{ borderRadius: 0 }}
               onClick={() => removeEvent(i, item.id)}
               aria-label="delete"
             >
@@ -140,12 +162,10 @@ export default function Events(props) {
             </IconButton>
           </Stack>
         ))}
-        <Typography>Total:{person.total}</Typography>
+        <Typography>Paid:{person.total}</Typography>
         <Button onClick={() => addEvent(i)} variant="contained">
           Add
         </Button>
-        
-        
       </Grid>
     </Card>
   ));
