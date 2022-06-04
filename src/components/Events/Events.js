@@ -105,6 +105,7 @@ export default function Events(props) {
       raised
       key={person.name}
       style={{ width: "600px", margin: "20px", padding: "20px" }}
+   
     >
       <Typography>Person {i + 1}</Typography>
       <Grid
@@ -112,9 +113,10 @@ export default function Events(props) {
         justifyContent="center"
         alignItems="center"
         direction="column"
+  
       >
         {person.items.map((item, eventIndex) => (
-          <Stack key={item.id} direction="row" spacing={2}>
+          <Stack key={item.id} direction="row" >
             <TextField
               required
               label="Required"
@@ -130,6 +132,7 @@ export default function Events(props) {
               value={item.price===0?'':item.price}
             />
             <IconButton
+            sx={{margin:"10px"}}
               onClick={() => removeEvent(i, item.id)}
               aria-label="delete"
             >
