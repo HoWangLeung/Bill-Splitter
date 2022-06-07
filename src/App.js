@@ -22,23 +22,30 @@ function App(props) {
       name: "Person One",
       items: [{ id: 0, name: "Lunch", price: 1110 }],
       total: 1110,
+      editName:false,
+      hasEdited:false,
     },
     {
       id: 1,
       name: "Person Two",
       items: [{ id: 0, name: "Dinner", price: 210 }],
       total: 210,
+      editName:false,
+      hasEdited:false,
     },
     {
       id: 2,
       name: "Person Three",
       items: [{ id: 0, name: "Breakfast", price: 310 }],
       total: 310,
+      editName:false,
+      hasEdited:false,
     },
   ]);
 
   const [result, setResult] = useState([]);
   const [sum, setSum] = useState(0);
+  const [mean, setMean] = useState(0);
 
   useEffect(() => {
     let newData = [];
@@ -75,9 +82,10 @@ function App(props) {
     const valuesPaid = Object.values(payments);
 
     const sum = valuesPaid.reduce((acc, curr) => curr + acc);
-    setSum(sum);
-    const mean = sum / people.length;
 
+    const mean = sum / people.length;
+    setMean(mean);
+    setSum(sum);
     const sortedPeople = people.sort(
       (personA, personB) => payments[personA] - payments[personB]
     );
@@ -120,135 +128,139 @@ function App(props) {
 
   return (
     <div className="App">
-      <Container maxWidth="xl">
-        <Grid
-          container
-          direction="row"
-          alignItems="center"
-          justifyContent="center"
-        >
-          <Typography
-            variant="h4"
-            sx={{ fontWeight: "900", margin: "30px 30px 10px 30px" }}
-          >
-            Bill Splitter
-          </Typography>
-        </Grid>
-
-        <Grid
-          container
-          direction="row"
-          alignItems="center"
-          justifyContent="center"
-          sx={{ margin: "30px 0px" }}
-        >
-          <Typography
-            variant="body2"
-            sx={{ fontWeight: "600", fontSize: "110%" }}
-          >
-            Number of people:&nbsp;{" "}
-          </Typography>
-          <Stack
-            direction={{ xs: "column", sm: "row" }}
-            spacing={{ xs: 1, sm: 2, md: 4 }}
-          >
-            {Array.from(Array(9).keys()).map((item, i) => {
-              return (
-                <Button
-                  onClick={() => setNumPeople(i+2)}
-                  variant={numPeople === i + 2 ? "contained" : "outlined"}
-                >
-                  {i + 2}
-                </Button>
-              );
-            })}
-          </Stack>
-        </Grid>
-
-        <Grid container>
+      <div>
+        <Container maxWidth="lg">
           <Grid
             container
-            item
-            md={6}
-            sx={{
-              maxHeight: "800px",
-              overflowY: "auto",
-              "&::-webkit-scrollbar": {
-                width: "0.5rem",
-                height: "0px",
-              },
-            }}
-          >
-            <Events data={data} setData={setData} />
-          </Grid>
-          <Grid
-            container
-            item
-            md={6}
+            direction="row"
             alignItems="center"
             justifyContent="center"
           >
-            {result.length > 0 && <Result result={result} sum={sum} />}
-
-            <Box sx={{ display: "flex", flexDirection: "column" }}>
-              {result.length == 0 && (
-                <img
-                  style={{ borderRadius: "10px" }}
-                  alt="split"
-                  src="/split.png"
-                />
-              )}
-              <Box sx={{ margin: "10px" }}>
-                <Button
-                  size="large"
-                  variant="contained"
-                  onClick={calculateResult}
-                >
-                  Calculate
-                </Button>
-              </Box>
-            </Box>
+            <Typography
+              variant="h4"
+              sx={{ fontWeight: "900", margin: "30px 30px 10px 30px" }}
+            >
+              Bill Splitter
+            </Typography>
           </Grid>
-        </Grid>
-      </Container>
 
-      {/* <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p> */}
-      <div id="footer">
-        <svg
-          width="100%"
-          height="100%"
-          id="svg"
-          viewBox="0 0 1440 600"
-          xmlns="http://www.w3.org/2000/svg"
-          class="transition duration-300 ease-in-out delay-150"
-        >
-          <defs>
-            <linearGradient id="gradient" x1="0%" y1="50%" x2="100%" y2="50%">
-              <stop offset="5%" stop-color="#002bdc88"></stop>
-              <stop offset="95%" stop-color="#32ded488"></stop>
-            </linearGradient>
-          </defs>
-          <path
-            d="M 0,600 C 0,600 0,200 0,200 C 94.35406698564594,215.17703349282297 188.7081339712919,230.35406698564594 275,248 C 361.2918660287081,265.64593301435406 439.52153110047834,285.7607655502393 545,262 C 650.4784688995217,238.23923444976072 783.2057416267943,170.60287081339712 900,169 C 1016.7942583732057,167.39712918660288 1117.6555023923445,231.8277511961723 1205,248 C 1292.3444976076555,264.1722488038277 1366.1722488038276,232.08612440191385 1440,200 C 1440,200 1440,600 1440,600 Z"
-            stroke="none"
-            stroke-width="0"
-            fill="url(#gradient)"
-            class="transition-all duration-300 ease-in-out delay-150 path-0"
-          ></path>
-          <defs>
-            <linearGradient id="gradient" x1="0%" y1="50%" x2="100%" y2="50%">
-              <stop offset="5%" stop-color="#002bdcff"></stop>
-              <stop offset="95%" stop-color="#32ded4ff"></stop>
-            </linearGradient>
-          </defs>
-          <path
-            d="M 0,600 C 0,600 0,400 0,400 C 72.43062200956936,364.04784688995215 144.86124401913872,328.0956937799043 246,325 C 347.1387559808613,321.9043062200957 476.98564593301444,351.6650717703349 581,374 C 685.0143540669856,396.3349282296651 763.1961722488038,411.244019138756 843,413 C 922.8038277511962,414.755980861244 1004.2296650717703,403.35885167464113 1104,399 C 1203.7703349282297,394.64114832535887 1321.8851674641148,397.32057416267946 1440,400 C 1440,400 1440,600 1440,600 Z"
-            stroke="none"
-            stroke-width="0"
-            fill="url(#gradient)"
-            class="transition-all duration-300 ease-in-out delay-150 path-1"
-          ></path>
-        </svg>
+          <Grid
+            container
+            direction="row"
+            alignItems="center"
+            justifyContent="center"
+            sx={{ margin: "30px 0px" }}
+          >
+            <Typography
+              variant="body2"
+              sx={{ fontWeight: "600", fontSize: "110%" }}
+            >
+              Number of people:&nbsp;{" "}
+            </Typography>
+            <Stack
+              direction={{ xs: "column", sm: "row" }}
+              spacing={{ xs: 1, sm: 2, md: 4 }}
+            >
+              {Array.from(Array(9).keys()).map((item, i) => {
+                return (
+                  <Button
+                    onClick={() => setNumPeople(i + 2)}
+                    variant={numPeople === i + 2 ? "contained" : "outlined"}
+                  >
+                    {i + 2}
+                  </Button>
+                );
+              })}
+            </Stack>
+          </Grid>
+
+          <Grid container>
+            <Grid
+              container
+              item
+              md={6}
+              sx={{
+                maxHeight: "750px",
+                overflowY: "auto",
+                "&::-webkit-scrollbar": {
+                  width: "0.5rem",
+                  height: "0px",
+                },
+              }}
+            >
+              <Events data={data} setData={setData} />
+            </Grid>
+            <Grid
+              container
+              item
+              md={6}
+              alignItems="center"
+              justifyContent="center"
+            
+            >
+              {result.length > 0 && (
+                <Result result={result} sum={sum} mean={mean} />
+              )}
+
+              <Box sx={{ display: "flex", flexDirection: "column" }}>
+                {result.length == 0 && (
+                  <img
+                    style={{ borderRadius: "10px" }}
+                    alt="split"
+                    src="/split.png"
+                  />
+                )}
+                <Box sx={{ margin: "10px" }}>
+                  <Button
+                    size="large"
+                    variant="contained"
+                    onClick={calculateResult}
+                  >
+                    Calculate
+                  </Button>
+                </Box>
+              </Box>
+            </Grid>
+          </Grid>
+        </Container>
+
+        <div id="footer">
+          <svg
+            width="100%"
+            height="100%"
+            id="svg"
+            viewBox="0 0 1440 600"
+            xmlns="http://www.w3.org/2000/svg"
+            class="transition duration-300 ease-in-out delay-150"
+          >
+            <defs>
+              <linearGradient id="gradient" x1="0%" y1="50%" x2="100%" y2="50%">
+                <stop offset="5%" stop-color="#002bdc88"></stop>
+                <stop offset="95%" stop-color="#32ded488"></stop>
+              </linearGradient>
+            </defs>
+            <path
+              d="M 0,600 C 0,600 0,200 0,200 C 94.35406698564594,215.17703349282297 188.7081339712919,230.35406698564594 275,248 C 361.2918660287081,265.64593301435406 439.52153110047834,285.7607655502393 545,262 C 650.4784688995217,238.23923444976072 783.2057416267943,170.60287081339712 900,169 C 1016.7942583732057,167.39712918660288 1117.6555023923445,231.8277511961723 1205,248 C 1292.3444976076555,264.1722488038277 1366.1722488038276,232.08612440191385 1440,200 C 1440,200 1440,600 1440,600 Z"
+              stroke="none"
+              stroke-width="0"
+              fill="url(#gradient)"
+              class="transition-all duration-300 ease-in-out delay-150 path-0"
+            ></path>
+            <defs>
+              <linearGradient id="gradient" x1="0%" y1="50%" x2="100%" y2="50%">
+                <stop offset="5%" stop-color="#002bdcff"></stop>
+                <stop offset="95%" stop-color="#32ded4ff"></stop>
+              </linearGradient>
+            </defs>
+            <path
+              d="M 0,600 C 0,600 0,400 0,400 C 72.43062200956936,364.04784688995215 144.86124401913872,328.0956937799043 246,325 C 347.1387559808613,321.9043062200957 476.98564593301444,351.6650717703349 581,374 C 685.0143540669856,396.3349282296651 763.1961722488038,411.244019138756 843,413 C 922.8038277511962,414.755980861244 1004.2296650717703,403.35885167464113 1104,399 C 1203.7703349282297,394.64114832535887 1321.8851674641148,397.32057416267946 1440,400 C 1440,400 1440,600 1440,600 Z"
+              stroke="none"
+              stroke-width="0"
+              fill="url(#gradient)"
+              class="transition-all duration-300 ease-in-out delay-150 path-1"
+            ></path>
+          </svg>
+        </div>
       </div>
     </div>
   );

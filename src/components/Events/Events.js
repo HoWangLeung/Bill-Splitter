@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import React from "react";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
-import EditIcon from '@mui/icons-material/Edit';
+import EditIcon from "@mui/icons-material/Edit";
 export default function Events(props) {
   const { data, setData } = props;
   console.log(props);
@@ -100,7 +100,48 @@ export default function Events(props) {
   };
 
   const changeName = (person) => {
-    console.log(person);
+    let target = data.find((d) => d.id === person.id);
+    target.editName = true;
+    let newData = data;
+    data.map((d) => {
+      if (d.id === target.id) {
+        d = target;
+      }
+      return d;
+    });
+    setData([...newData]);
+  };
+  const changeNameValue = (e, person) => {
+    let target = data.find((d) => d.id === person.id);
+    target.name = e.target.value;
+    target.hasEdited = true;
+    let newData = data;
+    data.map((d) => {
+      if (d.id === target.id) {
+        d = target;
+      }
+      return d;
+    });
+    setData([...newData]);
+  };
+
+  const confirmChangedName = (e, person) => {
+    let target = data.find((d) => d.id === person.id);
+    target.editName = false;
+    target.hasEdited = false;
+    let newData = data;
+    data.map((d) => {
+      if (d.id === target.id) {
+        d = target;
+      }
+      return d;
+    });
+    setData([...newData]);
+  };
+  const handleFocus = (e, person) => {
+    if (!person.hasEdited) {
+      e.target.select();
+    }
   };
 
   return data.map((person, i) => (
@@ -114,14 +155,39 @@ export default function Events(props) {
         borderRadius: "15px",
       }}
     >
-      <Grid container direction="row" alignItems="center" justifyContent="center">
-        <Typography sx={{ fontWeight: "600" }}>{person.name}</Typography>
+      <Grid
+        container
+        direction="row"
+        alignItems="center"
+        justifyContent="center"
+      >
+        {!person.editName && (
+          <Typography sx={{ fontWeight: "600" }}>{person.name}</Typography>
+        )}
+        {person.editName && (
+          <TextField
+            onFocus={(e) => handleFocus(e, person)}
+            variant="standard"
+            inputProps={{ autoFocus: true }}
+            name="person_name"
+            // onChange={(e) => handleEventChange(e, item, person)}
+            value={person.name}
+            onKeyPress={(e) => {
+              if (e.key === "Enter") {
+                e.target.blur(); 
+              }
+            }}
+            onBlur={(e) => confirmChangedName(e, person)}
+            onChange={(e) => changeNameValue(e, person)}
+          />
+        )}
+
         <IconButton
           sx={{ borderRadius: 0 }}
           onClick={() => changeName(person)}
           aria-label="delete"
         >
-          <EditIcon   sx={{height:"15px"}} />
+          <EditIcon sx={{ height: "15px" }} />
         </IconButton>
       </Grid>
 
@@ -136,7 +202,7 @@ export default function Events(props) {
             key={item.id}
             direction="row"
             spacing={1}
-            sx={{ margin: "10px 0px" }}
+            sx={{ margin: "5px 0px" }}
           >
             <TextField
               required
@@ -162,7 +228,7 @@ export default function Events(props) {
             </IconButton>
           </Stack>
         ))}
-        <Typography>Paid:{person.total}</Typography>
+        <Typography>Paid: ${person.total}</Typography>
         <Button onClick={() => addEvent(i)} variant="contained">
           Add
         </Button>
